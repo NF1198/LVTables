@@ -1,0 +1,296 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>SQLite3 Palette &#8212; SQLite3LV 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Cursor Palette" href="Cursor_lvclass.html" />
+    <link rel="prev" title="Basic Usage" href="basicusage.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Cursor_lvclass.html" title="Cursor Palette"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="basicusage.html" title="Basic Usage"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SQLite3LV 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sqlite3-palette">
+<h1>SQLite3 Palette<a class="headerlink" href="#sqlite3-palette" title="Permalink to this headline">¶</a></h1>
+<div class="figure">
+<img alt="The SQLite3LV top-level palette" src="_images/SQLite3LV_palette.png" />
+</div>
+<div class="section" id="connect">
+<span id="index-0"></span><h2>Connect<a class="headerlink" href="#connect" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_sqlite3_lvclass_Connectc.png" src="_images/SQLite3LV_lvlib_sqlite3_lvclass_Connectc.png" />
+</div>
+<p>Opens a connection to an SQLite3 database. The database connection has behavior
+similar to a reference in LabVIEW, i.e. the connection can be passed as if it were
+a reference.</p>
+<p>The path should be a valid resource. The default path is to open an in-memory database.</p>
+<p>The SQLITE3 Open Flags must be a valid combination of open flags. Incorrect open flags will likely result in SQLITE3 error 21 (library misuse).</p>
+<p>Refer to the <a class="reference external" href="https://www.sqlite.org/c3ref/open.html">sqlite3_open_v2()</a> documentation for details.</p>
+<dl class="docutils">
+<dt><img alt="STRINGC" src="_images/cstr.png" /> <strong>path</strong></dt>
+<dd><p class="first">Path to an SQLite3 database</p>
+<p class="last"><strong>:memory:</strong> will create and open an in-memory database</p>
+</dd>
+<dt><img alt="U32C" src="_images/cu32.png" /> <strong>SQLITE3 open flags</strong></dt>
+<dd><p class="first">Flags to apply when opening the database.</p>
+<p class="last">Flags may be combined using the OR primitive. For example,</p>
+</dd>
+</dl>
+<img alt="_images/SQLite3LV_lvlib_sqlite3_lvclass_Connectc_options.png" src="_images/SQLite3LV_lvlib_sqlite3_lvclass_Connectc_options.png" />
+<dl class="docutils">
+<dt><img alt="SQLite3LVI" src="_images/iSQLite3LV.png" /> <strong>SQLite3LV Connection out</strong></dt>
+<dd><p class="first">A new SQLite3LV connection</p>
+<p class="last">The new connection will be invalid if there was an error opening the database connection.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="disconnect">
+<span id="index-1"></span><h2>Disconnect<a class="headerlink" href="#disconnect" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_sqlite3_lvclass_Disconnectc.png" src="_images/SQLite3LV_lvlib_sqlite3_lvclass_Disconnectc.png" />
+</div>
+<p>Disconnects and releases all resources related to an SQLite3LV database connection.</p>
+<p>Failure to disconnect from a database connection can cause a memory leak can will cause the
+database file to remain locked until the current application instance is closed.</p>
+<p>It is possbile that the disconnection fails and an error is returned. In this case,
+appropriate error handling code should be implemented to prevent leaking the database connection.</p>
+<p>Using this subVI on an invalid connection is a no-op.</p>
+<dl class="docutils">
+<dt><img alt="SQLite3LVC" src="_images/cSQLite3LV.png" /> <strong>SQLite3LV Connection in</strong></dt>
+<dd>The database connection to close.</dd>
+</dl>
+</div>
+<div class="section" id="get-cursor">
+<span id="index-2"></span><h2>Get Cursor<a class="headerlink" href="#get-cursor" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_sqlite3_lvclass_Get_Cursorc.png" src="_images/SQLite3LV_lvlib_sqlite3_lvclass_Get_Cursorc.png" />
+</div>
+<p>Returns a cursor for the specified database connection. The cursor data behaves
+like a cluster in LabVIEW, e.g. if used in a loop a shift register must be used
+to maintain the state of the cursor.</p>
+<p>The cursor does not need to be released or closed.</p>
+<dl class="docutils">
+<dt><img alt="SQLite3LVC" src="_images/cSQLite3LV.png" /> <strong>SQLite3LV Connection in/out</strong></dt>
+<dd>The database connection</dd>
+<dt><img alt="CursorI" src="_images/iCursor.png" /> <strong>SQLite3LV Cursor</strong></dt>
+<dd>A new database cursor. The cursor may be used to execute queries using the parent
+database connection.</dd>
+</dl>
+</div>
+<div class="section" id="backup-database">
+<span id="index-3"></span><h2>Backup Database<a class="headerlink" href="#backup-database" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_sqlite3_lvclass_Backup_Databasec.png" src="_images/SQLite3LV_lvlib_sqlite3_lvclass_Backup_Databasec.png" />
+</div>
+<p>Initiates a backup from one active database connection to another. A second active
+database connection must be supplied to this function.</p>
+<p>Refer to the <a class="reference external" href="https://www.sqlite.org/backup.html">SQLite3 backup API documentation</a>
+for more information regarding backing up databases.</p>
+<p>This VI may be used to backup an in-memory database to a disk-based database.</p>
+<p>The database IDs input controls the name of the source and destination database (default is MAIN)</p>
+<p>Progress notifications will be posted to the optionally supplied U8-typed user event.
+Progress is reported as values ranging from 0 to 100.</p>
+<p>The destination database is automatically locked for the duration of the backup
+operation.</p>
+<p>The source database may be locked and unlocked multiple times during the backup
+operation so that other threads may use the source database connection while the
+backup operation is in progress.</p>
+<dl class="docutils">
+<dt><img alt="SQLite3LVC" src="_images/cSQLite3LV.png" /> <strong>SQLite3LV Connection src in/out</strong></dt>
+<dd>The source database connection</dd>
+<dt><img alt="SQLite3LVC" src="_images/cSQLite3LV.png" /> <strong>SQLite3LV Connection dst in/out</strong></dt>
+<dd>The destination database connection. <em>This connection will remain locked
+throughout the backup operation.</em></dd>
+<dt><img alt="CLUSTC" src="_images/ccclst.png" /> <strong>database IDs</strong> (optional)</dt>
+<dd>Names of the source and destination database. Defaults to “MAIN”.</dd>
+<dt><img alt="EVENTU8C" src="_images/cusereventrn.png" /> <strong>progress event</strong> (optional)</dt>
+<dd><p class="first">A U8-typed event reference. Backup progress will be periodically posted to this
+event. Use a LabVIEW event structure to capture progress notifications.</p>
+<p class="last">Progress vaules range from 0 - 100.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="get-lock">
+<span id="index-4"></span><h2>Get Lock<a class="headerlink" href="#get-lock" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_sqlite3_lvclass_Get_Lockc.png" src="_images/SQLite3LV_lvlib_sqlite3_lvclass_Get_Lockc.png" />
+</div>
+<p>Returns a memory reference that can be used as a lock for the database connection.
+The contents of the memory reference are un-used (zero). Refer to the multithreading
+topic for further information.</p>
+<p>The <strong>Cursor::Get Lock</strong> VI will return the same lock for a given database connection.
+Either method may be used to obtain a lock for a database connection.</p>
+<p>The following code snippet demonstrates how to use a database connection lock.</p>
+<div class="figure">
+<img alt="example of how to use a database lock" src="_images/SQLite3_lock_example.png" />
+</div>
+</div>
+</div>
+<div class="section" id="sqlite3-utilities-palette">
+<h1>SQLite3 Utilities Palette<a class="headerlink" href="#sqlite3-utilities-palette" title="Permalink to this headline">¶</a></h1>
+<div class="figure">
+<img alt="_images/SQLite3LV_utilities_palette.png" src="_images/SQLite3LV_utilities_palette.png" />
+</div>
+<div class="section" id="match-glob">
+<span id="index-5"></span><h2>Match GLOB<a class="headerlink" href="#match-glob" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_sqlite3_lvclass_Match_GLOBc.png" src="_images/SQLite3LV_lvlib_sqlite3_lvclass_Match_GLOBc.png" />
+</div>
+<p>This VI can be used to apply the SQLite3 GLOB matching function to an arbitrary
+pair of strings. GLOB matching is case-sensitive.</p>
+<dl class="docutils">
+<dt><img alt="STRINGC" src="_images/cstr.png" /> <strong>string</strong></dt>
+<dd>String to test</dd>
+<dt><img alt="STRINGC" src="_images/cstr.png" /> <strong>GLOB</strong></dt>
+<dd><p class="first">GLOB pattern to use.</p>
+<p class="last">For example, the GLOB “<code class="docutils literal"><span class="pre">ca*</span></code>” matchs <code class="docutils literal"><span class="pre">cat</span></code>, <code class="docutils literal"><span class="pre">car</span></code>, and <code class="docutils literal"><span class="pre">cake</span></code>, but doesn’t match <code class="docutils literal"><span class="pre">CAT</span></code>.</p>
+</dd>
+<dt><img alt="BOOLI" src="_images/ibool.png" /> <strong>match?</strong></dt>
+<dd>Returns TRUE if the glob matches.</dd>
+</dl>
+</div>
+<div class="section" id="string-compare-case-in-sensitive">
+<span id="index-6"></span><h2>String Compare (case in-sensitive)<a class="headerlink" href="#string-compare-case-in-sensitive" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_sqlite3_lvclass_String_Compare_(case_insensitive)c.png" src="_images/SQLite3LV_lvlib_sqlite3_lvclass_String_Compare_(case_insensitive)c.png" />
+</div>
+<p>This VI can be used to compare two strings using the SQLite3 API case in-sensitive
+string comparison function.</p>
+<dl class="docutils">
+<dt><img alt="STRINGC" src="_images/cstr.png" /> <strong>string A</strong></dt>
+<dd>String to test</dd>
+<dt><img alt="STRINGC" src="_images/cstr.png" /> <strong>string B</strong></dt>
+<dd>String to test</dd>
+<dt><img alt="I32I" src="_images/ii32.png" /> <strong>result</strong></dt>
+<dd><p class="first">Result of the string comparison.</p>
+<p>positive if A &gt; B</p>
+<p class="last">zero if A == B</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="randomness">
+<span id="index-7"></span><h2>Randomness<a class="headerlink" href="#randomness" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_sqlite3_lvclass_Randomnessc.png" src="_images/SQLite3LV_lvlib_sqlite3_lvclass_Randomnessc.png" />
+</div>
+<p>Generates random bytes using the pseudo-random number generator in the SQLite3 API.
+Refer to the <a class="reference external" href="https://www.sqlite.org/c3ref/randomness.html">SQLite3 API documentation</a> for details.</p>
+<dl class="docutils">
+<dt><img alt="I32C" src="_images/ci32.png" /> <strong>nbytes</strong></dt>
+<dd>number of bytes of pseudo-random data to generate</dd>
+<dt><img alt="U81DI" src="_images/i1du8.png" /> <strong>random bytes</strong></dt>
+<dd>result containing pseudo-random data</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">SQLite3 Palette</a><ul>
+<li><a class="reference internal" href="#connect">Connect</a></li>
+<li><a class="reference internal" href="#disconnect">Disconnect</a></li>
+<li><a class="reference internal" href="#get-cursor">Get Cursor</a></li>
+<li><a class="reference internal" href="#backup-database">Backup Database</a></li>
+<li><a class="reference internal" href="#get-lock">Get Lock</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sqlite3-utilities-palette">SQLite3 Utilities Palette</a><ul>
+<li><a class="reference internal" href="#match-glob">Match GLOB</a></li>
+<li><a class="reference internal" href="#string-compare-case-in-sensitive">String Compare (case in-sensitive)</a></li>
+<li><a class="reference internal" href="#randomness">Randomness</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="basicusage.html"
+                        title="previous chapter">Basic Usage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Cursor_lvclass.html"
+                        title="next chapter">Cursor Palette</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/SQLite3_lvclass.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Cursor_lvclass.html" title="Cursor Palette"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="basicusage.html" title="Basic Usage"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SQLite3LV 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Nicholas Folse.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,291 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Cursor Palette &#8212; SQLite3LV 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Multi-threading" href="multithreading.html" />
+    <link rel="prev" title="SQLite3 Palette" href="SQLite3_lvclass.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="multithreading.html" title="Multi-threading"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="SQLite3_lvclass.html" title="SQLite3 Palette"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SQLite3LV 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="cursor-palette">
+<h1>Cursor Palette<a class="headerlink" href="#cursor-palette" title="Permalink to this headline">¶</a></h1>
+<div class="figure">
+<img alt="_images/SQLite3LV_cursor_palette.png" src="_images/SQLite3LV_cursor_palette.png" />
+</div>
+<div class="section" id="execute-statement">
+<span id="index-0"></span><h2>Execute Statement<a class="headerlink" href="#execute-statement" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_cursor_lvclass_Exceute_Statementc.png" src="_images/SQLite3LV_lvlib_cursor_lvclass_Exceute_Statementc.png" />
+</div>
+<p>Executes a single SQL statement terminated by a semicolon (;).</p>
+<p>If multiple statements are included in the SQL statement input, only the first statement will be executed.</p>
+<p>The statement may contain unnamed parameters and may return query results.</p>
+<dl class="docutils">
+<dt><img alt="CursorC" src="_images/cCursor.png" /> <strong>SQLite3LV Cursor in/out</strong></dt>
+<dd>A valid SQLite3LV cursor</dd>
+<dt><img alt="STRINGC" src="_images/cstr.png" /> <strong>SQL statement</strong></dt>
+<dd><p class="first">A valid SQL statement. Only the first statement found in the string will be executed.
+The statement may contain indexed parameters. Parameters are specified by a question mark (?).
+Refer to the SQLite3 documentation <a class="reference external" href="https://www.sqlite.org/c3ref/bind_blob.html">Binding Values to Prepared Statements</a>
+article for more information on parameter binding syntax. Named parameters can only be accessed
+by index and the binding API is not aware of named parameters.</p>
+<p class="last">Values may be bound after executing this VI using property node binding.</p>
+</dd>
+</dl>
+<div class="section" id="examples-of-valid-sql-statements">
+<h3>Examples of valid SQL Statements:<a class="headerlink" href="#examples-of-valid-sql-statements" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">SELECT</span> <span class="pre">`LastName`</span> <span class="pre">from</span> <span class="pre">`Persons`;</span></code></p>
+<p>Returns zero or more results of type string. Use “Column String” property, followed by the “Rows Finished?” property to retrieve results.</p>
+<p><code class="docutils literal"><span class="pre">SELECT</span> <span class="pre">`LastName`</span> <span class="pre">from</span> <span class="pre">`Persons`</span> <span class="pre">WHERE</span> <span class="pre">`LastName`</span> <span class="pre">GLOB</span> <span class="pre">?</span></code></p>
+<p>Returns zero or more results of type string. One string-typed query parameter. Use the “Bind String” property node after executing the query to bind the parameter. Use the “Column String” and “Rows Finished?” property to retrieve results.</p>
+<p><code class="docutils literal"><span class="pre">SELECT</span> <span class="pre">?</span> <span class="pre">+</span> <span class="pre">?;</span></code></p>
+<p>Returns a single result of arbitrary type. Accepts two parameters of arbitrary type. Use the “Bind DBL” two bind two input parameters. Use the “Column DBL” to retrieve the query result.</p>
+</div>
+</div>
+<div class="section" id="property-node-binding">
+<span id="index-1"></span><h2>Property Node Binding<a class="headerlink" href="#property-node-binding" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/Cursor_property_node.png" src="_images/Cursor_property_node.png" />
+</div>
+<p>A property node may be used to bind values into an SQL statement that utilizes
+parameter binding. The statement will be automatically executed after the Nth expected value
+is bound. Supported types are <code class="docutils literal"><span class="pre">Blob</span></code>, <code class="docutils literal"><span class="pre">Double</span></code>, <code class="docutils literal"><span class="pre">I32</span></code>, <code class="docutils literal"><span class="pre">I64</span></code>, and <code class="docutils literal"><span class="pre">Text</span></code>. <code class="docutils literal"><span class="pre">Blob</span></code> data is bound as raw bytes
+while <code class="docutils literal"><span class="pre">Text</span></code> data is bound as UTF-8 character data.</p>
+<p>If fewer than expected values are bound, the statement will not be executed.</p>
+<p>If more than expected values are bound, the extra values are ignored.</p>
+<div class="section" id="example-of-property-node-binding">
+<h3>Example of property node binding<a class="headerlink" href="#example-of-property-node-binding" title="Permalink to this headline">¶</a></h3>
+<div class="figure">
+<img alt="Example of binding text and a double value into a statement." src="_images/Cursor_property_node_02.png" />
+</div>
+</div>
+</div>
+<div class="section" id="property-node-query-results">
+<span id="index-2"></span><h2>Property Node Query Results<a class="headerlink" href="#property-node-query-results" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="Column data property nodes" src="_images/Cursor_property_node_03.png" />
+</div>
+<div class="figure">
+<img alt="The **Rows Finished?** property node returns TRUE when there are no more rows of data in the query result." src="_images/Cursor_property_node_RowsFinished.png" />
+</div>
+<div class="figure">
+<img alt="The **Column Count** property node returns the number of columns in the query result." src="_images/Cursor_property_node_ColumnCount.png" />
+</div>
+<p>A property node may be used to retrieve values from a query. Values are extracted
+in the order defined by the property node. Client code is responsible for ensuring
+that the number of columns extracted matches the number of columns returned by the query.</p>
+<p>Query results may be extracted as <code class="docutils literal"><span class="pre">Blob</span></code>, <code class="docutils literal"><span class="pre">Double</span></code>, <code class="docutils literal"><span class="pre">I32</span></code>, <code class="docutils literal"><span class="pre">I64</span></code>, or <code class="docutils literal"><span class="pre">Text</span></code>.
+<code class="docutils literal"><span class="pre">Blob</span></code> data is returned as raw bytes. <code class="docutils literal"><span class="pre">Text</span></code> data is returned as a UTF-8 string.</p>
+<p>A special boolean property <strong>Rows Finished?</strong> will return TRUE if the query is finished
+and no further data is available in the query result.</p>
+<p>The <strong>Column Count</strong> property can be used to determine the number of columns of data in the query result.</p>
+<div class="section" id="example-of-property-node-query-extraction">
+<h3>Example of property node query extraction<a class="headerlink" href="#example-of-property-node-query-extraction" title="Permalink to this headline">¶</a></h3>
+<p>The following example demonstrates how to retrieve results from a query.</p>
+<p>A shift-register (<img alt="CURSORSHIFT" src="_images/cursor_shift_register.png" />) is used to maintain cursor state within the while loop.</p>
+<div class="figure">
+<img alt="Example of retrieving results from a query" src="_images/Cursor_property_node_04.png" />
+</div>
+</div>
+</div>
+<div class="section" id="fetch-n-results">
+<span id="index-3"></span><h2>Fetch N Results<a class="headerlink" href="#fetch-n-results" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_cursor_lvclass_Fetch_Nc.png" src="_images/SQLite3LV_lvlib_cursor_lvclass_Fetch_Nc.png" />
+</div>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_cursor_lvclass_Fetch_N_instances.png" src="_images/SQLite3LV_lvlib_cursor_lvclass_Fetch_N_instances.png" />
+</div>
+<p>Use this VI to extract N rows of identically typed data from a query result.
+Manually select the polymorphic instance of the VI to use.</p>
+<dl class="docutils">
+<dt><img alt="CursorC" src="_images/cCursor.png" /> <strong>SQlite3LV Cursor in/out</strong></dt>
+<dd>A valid SQLite3 cursor</dd>
+<dt><img alt="I32C" src="_images/ci32.png" /> <strong>n rows</strong></dt>
+<dd>Number of rows to read (default is all rows, -1).</dd>
+<dt><img alt="STRING2DI" src="_images/i2dstr.png" /> <strong>result</strong></dt>
+<dd>Query result (type depends on polymorphic instance)</dd>
+<dt><img alt="BOOLI" src="_images/ibool.png" /> <strong>finished?</strong></dt>
+<dd>Returns TRUE if all rows have been read from the query result.</dd>
+</dl>
+</div>
+<div class="section" id="get-lock">
+<span id="index-4"></span><h2>Get Lock<a class="headerlink" href="#get-lock" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_sqlite3_lvclass_Get_Lockc.png" src="_images/SQLite3LV_lvlib_sqlite3_lvclass_Get_Lockc.png" />
+</div>
+<p>Returns a memory reference that can be used as a lock for the database connection.
+The contents of the memory reference are un-used (zero). Refer to the multithreading
+topic for further information.</p>
+<p>The <strong>SQLite3LV::Get Lock</strong> VI will return the same lock for a given database connection.
+Either method may be used to obtain a lock for a database connection.</p>
+<p>The following code snippet demonstrates how to use a database connection lock.</p>
+<div class="figure">
+<img alt="example of how to use a database lock" src="_images/SQLite3_lock_example.png" />
+</div>
+</div>
+</div>
+<div class="section" id="cursor-utilities-palette">
+<h1>Cursor Utilities Palette<a class="headerlink" href="#cursor-utilities-palette" title="Permalink to this headline">¶</a></h1>
+<div class="figure">
+<img alt="_images/SQLite3LV_cursor_utilities_palette.png" src="_images/SQLite3LV_cursor_utilities_palette.png" />
+</div>
+<div class="section" id="table-info">
+<span id="index-5"></span><h2>Table Info<a class="headerlink" href="#table-info" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_cursor_lvclass_Table_Infoc.png" src="_images/SQLite3LV_lvlib_cursor_lvclass_Table_Infoc.png" />
+</div>
+<p>Returns information about the specified table.</p>
+<p>This VI is equivalent to executing <code class="docutils literal"><span class="pre">PRAGMA</span> <span class="pre">table_info(table-name)</span></code>
+and formatting the results into an array of clusters.</p>
+<dl class="docutils">
+<dt><img alt="CursorC" src="_images/cCursor.png" /> <strong>SQlite3LV Cursor in/out</strong></dt>
+<dd>A valid SQLite3 cursor</dd>
+<dt><img alt="STRINGC" src="_images/cstr.png" /> <strong>table</strong></dt>
+<dd>Name of the table about which to retrieve information</dd>
+<dt><img alt="CLUSTI" src="_images/icclst.png" /> <strong>table info</strong></dt>
+<dd>Information about the columns in the specified table</dd>
+</dl>
+</div>
+<div class="section" id="table-exists">
+<h2>Table Exists?<a class="headerlink" href="#table-exists" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="_images/SQLite3LV_lvlib_cursor_lvclass_Table_Existsc.png" src="_images/SQLite3LV_lvlib_cursor_lvclass_Table_Existsc.png" />
+</div>
+<p>Returns TRUE if the specified table exists in the database.</p>
+<p>This subVI is equivalent to the following SQL query:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>SELECT COUNT(name) FROM sqlite_master WHERE type=&#39;table&#39; AND name = ?;
+</pre></div>
+</div>
+<dl class="docutils">
+<dt><img alt="CursorC" src="_images/cCursor.png" /> <strong>SQlite3LV Cursor in/out</strong></dt>
+<dd>A valid SQLite3 cursor</dd>
+<dt><img alt="STRINGC" src="_images/cstr.png" /> <strong>table</strong></dt>
+<dd>Name of the table to check</dd>
+<dt><img alt="BOOLI" src="_images/ibool.png" /> <strong>exists?</strong></dt>
+<dd>TRUE if the specified table exists</dd>
+</dl>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Cursor Palette</a><ul>
+<li><a class="reference internal" href="#execute-statement">Execute Statement</a><ul>
+<li><a class="reference internal" href="#examples-of-valid-sql-statements">Examples of valid SQL Statements:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#property-node-binding">Property Node Binding</a><ul>
+<li><a class="reference internal" href="#example-of-property-node-binding">Example of property node binding</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#property-node-query-results">Property Node Query Results</a><ul>
+<li><a class="reference internal" href="#example-of-property-node-query-extraction">Example of property node query extraction</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fetch-n-results">Fetch N Results</a></li>
+<li><a class="reference internal" href="#get-lock">Get Lock</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cursor-utilities-palette">Cursor Utilities Palette</a><ul>
+<li><a class="reference internal" href="#table-info">Table Info</a></li>
+<li><a class="reference internal" href="#table-exists">Table Exists?</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="SQLite3_lvclass.html"
+                        title="previous chapter">SQLite3 Palette</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="multithreading.html"
+                        title="next chapter">Multi-threading</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Cursor_lvclass.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="multithreading.html" title="Multi-threading"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="SQLite3_lvclass.html" title="SQLite3 Palette"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">SQLite3LV 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Nicholas Folse.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.7.
+    </div>
+  </body>
+</html>
