@@ -1,0 +1,7 @@
+*.lvlps
+*.aliases
+sandbox/*
+sqlite*.zip
+doc-LV/auto-doc/*
+doc/build/*
+*.*~
